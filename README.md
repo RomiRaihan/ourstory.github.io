@@ -10,6 +10,6 @@
     window.location.href = "flipbox.html";
   </script>
 
-  <p>Jika halaman tidak redirect otomatis, <a href="flipbox.html">klik di sini</a>.</p>
+  <p>Jika halaman tidak redirect otomatis, <a href="flipbook.html">klik di sini</a>.</p>
 </body>
 </html>
