@@ -1,0 +1,656 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Buku Kenangan Kita ❤️</title>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/3/turn.min.js"></script>
+
+    <style>
+      body {
+        margin: 0;
+        background:
+          radial-gradient(circle at 20% 20%, #ffd1dc, transparent),
+          radial-gradient(circle at 80% 80%, #ffc0cb, transparent), #fff;
+        font-family: Georgia, serif;
+        overflow: hidden;
+      }
+
+      /* ================= INTRO SCREEN ================= */
+
+      #introScreen {
+        position: fixed;
+        top: 0;
+        left: 0;
+
+        width: 100%;
+        height: 100%;
+
+        background: radial-gradient(circle, #ffafbd, #ffc3a0);
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        z-index: 99999;
+
+        transition: 1s;
+      }
+
+      .playButton {
+        padding: 20px 50px;
+
+        font-size: 24px;
+
+        border: none;
+        border-radius: 50px;
+
+        background: white;
+        color: #ff4d6d;
+
+        cursor: pointer;
+
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+
+        transition: 0.3s;
+      }
+
+      .playButton:hover {
+        transform: scale(1.1);
+      }
+
+      /* sembunyikan flipbook sebelum play */
+
+      #bookWrapper {
+        display: none;
+      }
+
+      /* ================= HEARTS ================= */
+
+      .hearts span {
+        position: absolute;
+        font-size: 20px;
+        animation: float linear infinite;
+      }
+
+      @keyframes float {
+        0% {
+          transform: translateY(100vh);
+          opacity: 0;
+        }
+
+        10% {
+          opacity: 1;
+        }
+
+        90% {
+          opacity: 1;
+        }
+
+        100% {
+          transform: translateY(-10vh);
+          opacity: 0;
+        }
+      }
+
+      /* ================= BOOK ================= */
+
+      .book-wrapper {
+        width: 100%;
+        height: 100vh;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        perspective: 2000px;
+
+        transition: all 0.8s ease;
+      }
+
+      .book-wrapper.center {
+        justify-content: start;
+        margin-left: -18%;
+      }
+
+      .book-wrapper.opened {
+        justify-content: flex-start;
+        padding-left: 4%;
+      }
+
+      .book-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      #book {
+        width: 1200px;
+        height: 700px;
+
+        transition: transform 0.8s ease;
+      }
+
+      /* PAGE DEFAULT */
+
+      .page {
+        background-image: url("gambar/1.png");
+        background-size: cover;
+        background-position: center;
+
+        box-shadow:
+          inset 0 0 40px rgba(0, 0, 0, 0.15),
+          0 15px 40px rgba(0, 0, 0, 0.3);
+
+        position: relative;
+      }
+
+      /* PAGE 2 BACKGROUND */
+
+      .page.bg2 {
+        background-image: url("gambar/2.png");
+      }
+      .page.bg3 {
+        background-image: url("gambar/2.jpg");
+      }
+      .page.bg4 {
+        background-image: url("gambar/3.jpg");
+      }
+      .page.bg5 {
+        background-image: url("gambar/2.jpg");
+      }
+      .page.bg6 {
+        background-image: url("gambar/3.jpg");
+      }
+      .page.bgn {
+        background-image: url("gambar/note.png");
+      }
+      .page.last {
+        background-image: url("gambar/last.png");
+      }
+
+      /* COVER */
+
+      .cover {
+        background-image: url("gambar/1.jpg");
+        background-size: cover;
+        background-position: center;
+      }
+
+      /* HEADER */
+
+      .page-header {
+        position: absolute;
+        top: 20px;
+        width: 100%;
+        text-align: center;
+        color: white;
+      }
+
+      .date {
+        font-size: 22px;
+        font-weight: bold;
+      }
+
+      .location {
+        font-size: 16px;
+      }
+
+      /* FOOTER */
+
+      .page-footer {
+        position: absolute;
+        bottom: 20px;
+        width: 90%;
+        text-align: center;
+        font-size: 18px;
+        font-style: italic;
+        color: white;
+        padding: 0 40px;
+      }
+
+      /* PHOTO */
+
+      .photo-container {
+        position: absolute;
+        top: 100px;
+        width: 100%;
+        height: 400px;
+      }
+      .photo-container p {
+        text-align: center;
+        margin-top: 10rem;
+        font-size: 3rem;
+        color: white;
+      }
+      .photo-container .note {
+        font-size: 1rem;
+
+        color: white;
+      }
+      .photo {
+        position: absolute;
+
+        width: 280px;
+        height: 180px;
+
+        background: white;
+        padding: 8px;
+
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+      }
+
+      .photo img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .photo1 {
+        top: 0;
+        left: 100px;
+        transform: rotate(-7deg);
+      }
+
+      .photo2 {
+        top: 150px;
+        left: 300px;
+        transform: rotate(6deg);
+      }
+      .photo0 {
+        top: 255px;
+        left: 101px;
+        width: 34%;
+        height: 30%;
+      }
+      .photo4 {
+        top: -70px;
+        left: 30px;
+        width: 50%;
+        height: 100%;
+        transform: rotate(-5deg);
+      }
+      .photo5 {
+        top: 50px;
+        left: 250px;
+        width: 50%;
+        height: 100%;
+        transform: rotate(5deg);
+      }
+      .photo6 {
+        top: 150px;
+        left: 30px;
+        width: 50%;
+        height: 100%;
+        transform: rotate(-5deg);
+      }
+
+      .photo3 {
+        top: 300px;
+        left: 100px;
+        transform: rotate(-5deg);
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- INTRO SCREEN -->
+
+    <div id="introScreen">
+      <button class="playButton" onclick="startBook()">Ready?</button>
+    </div>
+
+    <!-- AUDIO -->
+
+    <audio id="music" loop>
+      <source src="musik/music.mp3" type="audio/mpeg" />
+    </audio>
+
+    <div class="hearts" id="hearts"></div>
+
+    <div class="book-wrapper center" id="bookWrapper">
+      <div class="book-container">
+        <div id="book">
+          <div class="page cover"></div>
+          <!-- PAGE 1 -->
+
+          <div class="page">
+            <div class="photo photo0">
+              <img src="gambar/page1.2.jpeg" />
+            </div>
+          </div>
+
+          <!-- PAGE 2 -->
+
+          <div class="page bg2"></div>
+          <div class="page bg3">
+            <div class="page-header">
+              <div class="date">11 January 2026</div>
+              <div class="location">Bandung</div>
+            </div>
+
+            <div class="photo-container">
+              <div class="photo photo1">
+                <img src="gambar/page1.1.jpeg" />
+              </div>
+
+              <div class="photo photo2">
+                <img src="gambar/page1.2.jpeg" />
+              </div>
+
+              <div class="photo photo3">
+                <img src="gambar/page1.3.jpeg" />
+              </div>
+            </div>
+
+            <div class="page-footer">
+              "Hari Pertama kita bertemu kembali setelah bertahun-tahun lamanya,
+              dan Bandung merupakan tempatt kelahiran dan disana juga jatidiri
+              ditemukan. namun saat itu Bandung berbeda dari yang dulu, saat ini
+              kota itu terasa lebih special"
+            </div>
+          </div>
+
+          <!-- PAGE 2 -->
+
+          <div class="page bg4">
+            <div class="page-header">
+              <div class="date">31 January 2026</div>
+              <div class="location">Saung Koffe Hideung Karawang</div>
+            </div>
+
+            <div class="photo-container">
+              <div class="photo photo1">
+                <img src="gambar/page2.1.jpeg" />
+              </div>
+
+              <div class="photo photo2">
+                <img src="gambar/page2.2.jpeg" />
+              </div>
+
+              <div class="photo photo3">
+                <img src="gambar/page2.3.jpeg" />
+              </div>
+            </div>
+
+            <div class="page-footer">
+              "Hari dimana seorang pria anti kamera untuk pertama kalinya
+              menikmati dirinya ada di depan kamera"
+            </div>
+          </div>
+
+          <!-- PAGE 3 -->
+
+          <div class="page bg5">
+            <div class="page-header">
+              <div class="date">7 Februari 2026</div>
+              <div class="location">Nurre Cafe</div>
+            </div>
+
+            <div class="photo-container">
+              <div class="photo photo1">
+                <img src="gambar/page3.1.jpeg" />
+              </div>
+
+              <div class="photo photo2">
+                <img src="gambar/page3.2.jpeg" />
+              </div>
+
+              <div class="photo photo3">
+                <img src="gambar/page3.3.jpeg" />
+              </div>
+            </div>
+
+            <div class="page-footer">
+              "Hari dimana dia menyadarkan pria ini bahwa selama ini dia tidak
+              pernah menyayangi dirinya sendiri"
+            </div>
+          </div>
+
+          <!-- PAGE 4 -->
+
+          <div class="page bg6">
+            <div class="photo-container">
+              <div class="photo photo4">
+                <img src="gambar/page4.1.jpeg" />
+              </div>
+              <div class="photo photo5">
+                <img src="gambar/page4.2.jpeg" />
+              </div>
+              <div class="photo photo6">
+                <img src="gambar/page4.3.jpeg" />
+              </div>
+              <!-- <p>COMING SOON</p>
+
+              <p class="note">"Dan harapannya halaman halaman disini akan terus terisi"</p> -->
+            </div>
+          </div>
+          <div class="page bg4">
+            <video class="myVideo" muted playsinline width="100%" height="100%">
+              <source src="vidio/photobox.mp4" type="video/mp4" />
+            </video>
+          </div>
+
+          <!-- PAGE 3 -->
+
+          <div class="page bg5">
+            <video class="myVideo" muted playsinline width="100%" height="100%">
+              <source src="vidio/puncak.mp4" type="video/mp4" />
+            </video>
+          </div>
+
+          <!-- COVER BELAKANG -->
+          <div class="page bgn">
+            <div class="photo-container">
+    
+            </div>
+          </div>
+
+          <!-- PAGE 4 -->
+
+          <div class="page bg6">
+            <div class="photo-container">
+              <p>COMING SOON</p>
+
+              <p class="note">"Dan harapannya halaman halaman disini akan terus terisi"</p>
+            </div>
+        </div>
+          <div class="page last"></div>
+      </div>
+    </div>
+
+    <script>
+      function startBook() {
+        let audio = document.getElementById("music");
+
+        audio.pause();
+        audio.currentTime = 0;
+
+        let playPromise = audio.play();
+
+        if (playPromise !== undefined) {
+          playPromise
+            .then(() => {
+              audio.volume = 0;
+
+              let fade = setInterval(() => {
+                let newVolume = audio.volume + 0.05;
+
+                /* BATASI MAX 1 */
+
+                if (newVolume >= 1) {
+                  audio.volume = 1;
+                  clearInterval(fade);
+                } else {
+                  audio.volume = newVolume;
+                }
+              }, 200);
+            })
+            .catch((err) => {
+              console.log(err);
+              alert("Musik gagal diputar");
+            });
+        }
+
+        document.getElementById("bookWrapper").style.display = "flex";
+
+        document.getElementById("introScreen").style.opacity = "0";
+
+        setTimeout(() => {
+          document.getElementById("introScreen").style.display = "none";
+        }, 1000);
+      }
+
+      /* TURN JS */
+      $("#book").turn({
+        width: 1250,
+        height: 700,
+        autoCenter: true,
+        duration: 1400,
+        gradients: true,
+        elevation: 80,
+
+        when: {
+          turned: function (event, page) {
+            let videos = document.querySelectorAll(".myVideo");
+
+            videos.forEach((v) => v.pause());
+
+            let currentVideo = $(".page")
+              .eq(page - 1)
+              .find(".myVideo")[0];
+
+            if (currentVideo) {
+              currentVideo.currentTime = 0;
+              currentVideo.play().catch(() => {});
+            }
+          },
+          turning: function (event, page) {
+            let bookWrapper = document.getElementById("bookWrapper");
+
+            if (page > 1) {
+              bookWrapper.classList.remove("center");
+              bookWrapper.classList.add("opened");
+            }
+
+            if (page === 1) {
+              bookWrapper.classList.remove("opened");
+              bookWrapper.classList.add("center");
+            }
+          },
+        },
+      });
+
+      /* HEART */
+
+      function heart() {
+        let h = document.createElement("span");
+
+        h.innerHTML = "❤️";
+
+        h.style.left = Math.random() * 100 + "vw";
+        h.style.animationDuration = 5 + Math.random() * 5 + "s";
+
+        hearts.appendChild(h);
+
+        setTimeout(() => h.remove(), 10000);
+      }
+
+      setInterval(heart, 400);
+
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "ArrowRight") $("#book").turn("next");
+
+        if (e.key === "ArrowLeft") $("#book").turn("previous");
+      });
+      /* VIDEO HOVER PLAY */
+
+      document.querySelectorAll(".page").forEach((page) => {
+        let video = page.querySelector(".hoverVideo");
+
+        if (!video) return;
+
+        page.addEventListener("mouseenter", () => {
+          video.currentTime = 0;
+
+          let playPromise = video.play();
+
+          if (playPromise !== undefined) {
+            playPromise.catch(() => {});
+          }
+        });
+
+        page.addEventListener("mouseleave", () => {
+          video.pause();
+        });
+      });
+      /* ================= FORCE AUTOPLAY VIDEO FIX ================= */
+
+      let lastPlayedVideo = null;
+
+      function forcePlayVideo(page) {
+        setTimeout(() => {
+          let pages = document.querySelectorAll(".page");
+
+          if (!pages[page - 1]) return;
+
+          let video = pages[page - 1].querySelector(".myVideo");
+
+          // pause video sebelumnya
+          if (lastPlayedVideo && lastPlayedVideo !== video) {
+            lastPlayedVideo.pause();
+            lastPlayedVideo.currentTime = 0;
+          }
+
+          if (!video) return;
+
+          // WAJIB supaya browser izinkan autoplay
+          video.muted = true;
+          video.playsInline = true;
+          video.setAttribute("muted", "");
+          video.setAttribute("playsinline", "");
+
+          // reload supaya browser anggap fresh
+          video.load();
+
+          let playPromise = video.play();
+
+          if (playPromise !== undefined) {
+            playPromise
+              .then(() => {
+                lastPlayedVideo = video;
+              })
+              .catch(() => {});
+          }
+        }, 500); // delay supaya Turn.js selesai animasi
+      }
+
+      /* Hook ke Turn.js TANPA ubah kode lama */
+
+      $("#book").bind("turned", function (event, page) {
+        forcePlayVideo(page);
+      });
+
+      /* juga jalankan saat pertama kali buka */
+
+      function initFirstVideo() {
+        let page = $("#book").turn("page");
+
+        forcePlayVideo(page);
+      }
+
+      /* jalankan setelah user klik tombol play */
+
+      document
+        .querySelector(".playButton")
+        .addEventListener("click", function () {
+          setTimeout(() => {
+            initFirstVideo();
+          }, 1200);
+        });
+    </script>
+  </body>
+</html>
