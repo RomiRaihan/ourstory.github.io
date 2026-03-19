@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>Buku Kenangan Kita ❤️</title>
+    <title>Our Story ❤️</title>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/3/turn.min.js"></script>
@@ -34,7 +34,8 @@
         display: flex;
         justify-content: center;
         align-items: center;
-
+        background-size: cover;
+        background-repeat: no-repeat;
         z-index: 99999;
 
         transition: 1s;
@@ -211,6 +212,16 @@
         color: white;
         padding: 0 40px;
       }
+      .page-footer1 {
+        position: absolute;
+        bottom: 200px;
+        width: 90%;
+        text-align: center;
+        font-size: 18px;
+        font-style: italic;
+        color: black;
+        padding: 0 40px;
+      }
 
       /* PHOTO */
 
@@ -293,6 +304,12 @@
         left: 100px;
         transform: rotate(-5deg);
       }
+      .photo7 {
+        left: 100px;
+        width: max-content;
+        height: max-content;
+      }
+      
     </style>
   </head>
 
@@ -452,6 +469,40 @@
           <!-- PAGE 4 -->
 
           <div class="page bg6">
+            <div class="photo-container">
+              <div class="photo photo7">
+                <img src="gambar/page7.jpeg" style="width: 400px;"/>
+              </div>
+            </div>
+             <div class="page-footer1">
+              "Bahkan dunia pun tau bahwa tak lain dan ta bukan kamu adalah pemenangnya"
+            </div>
+        </div>
+                  <div class="page bg5">
+            <div class="page-header">
+              <div class="date">14 Maret 2026</div>
+              <div class="location">Karawang</div>
+            </div>
+
+            <div class="photo-container">
+              <div class="photo photo1">
+                <img src="gambar/page6.1.jpeg"  />
+              </div>
+
+              <div class="photo photo2">
+                <img src="gambar/page6.jpeg"  />
+              </div>
+
+              <div class="photo photo3">
+                <img src="gambar/page6.2.jpeg" />
+              </div>
+            </div>
+
+            <div class="page-footer">
+              "Hari dimana moment paling berkesan dalam hidup aku tercipta"
+            </div>
+          </div>
+        <div class="page bg6">
             <div class="photo-container">
               <p>COMING SOON</p>
 
@@ -651,6 +702,21 @@
             initFirstVideo();
           }, 1200);
         });
+        let startX=0;
+
+document.addEventListener("touchstart",function(e){
+startX=e.changedTouches[0].screenX;
+});
+
+document.addEventListener("touchend",function(e){
+let endX=e.changedTouches[0].screenX;
+if(endX<startX-50){
+$("#book").turn("next");
+}
+if(endX>startX+50){
+$("#book").turn("previous");
+}
+});
     </script>
   </body>
 </html>
